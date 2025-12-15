@@ -1,0 +1,6 @@
+timestamp,rating,review,ai_response,ai_summary,ai_action
+00:26.2,1,"Product arrived damaged.
+","LLM TEST RESPONSE | Rating=1 | Review=Product arrived damaged.
+","LLM TEST SUMMARY | Review=Product arrived damaged.
+",LLM TEST ACTION | Rating=1
+37:49.3,1,Product arrived damaged and packaging was broken.,I'm sorry to hear about the condition your product arrived in. Please accept our sincere apologies for any inconvenience this may have caused. We take these matters seriously and would like to assist you in resolving this issue. Could you please provide us with more details so we can address this matter promptly? Thank you for bringing this to our attention.,Customer received a damaged product with broken packaging.,Internal Action: Conduct a thorough investigation into the packaging and shipping process to identify any potential issues that may have led to the product arriving damaged. Implement stricter quality control measures to ensure that products are properly packaged and protected during shipping.
