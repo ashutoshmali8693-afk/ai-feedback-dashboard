@@ -1,28 +1,41 @@
 import requests
+import streamlit as st
 
+# Read API key from Streamlit secrets
+OPENROUTER_API_KEY = st.secrets.get("OPENROUTER_API_KEY")
 
-OPENROUTER_API_KEY = "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"
+if not OPENROUTER_API_KEY:
+    raise RuntimeError("OPENROUTER_API_KEY not found in Streamlit secrets")
+
+OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
+MODEL = "openai/gpt-3.5-turbo"
 
 
 def call_llm(prompt: str) -> str:
-    url = "https://openrouter.ai/api/v1/chat/completions"
-
     headers = {
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
         "Content-Type": "application/json",
-        "HTTP-Referer": "http://localhost",
-        "X-Title": "Fynd Take Home Task"
+
+        # REQUIRED by OpenRouter
+        "HTTP-Referer": "https://ai-feedback-dashboard.streamlit.app",
+        "X-Title": "AI Feedback Dashboard"
     }
 
     payload = {
-        "model": "openai/gpt-3.5-turbo",
+        "model": MODEL,
         "messages": [
             {"role": "user", "content": prompt}
         ],
-        "temperature": 0.3
+        "temperature": 0.4
     }
 
-    response = requests.post(url, headers=headers, json=payload)
+    response = requests.post(
+        OPENROUTER_URL,
+        headers=headers,
+        json=payload,
+        timeout=30
+    )
+
     response.raise_for_status()
 
     return response.json()["choices"][0]["message"]["content"]
@@ -31,28 +44,28 @@ def call_llm(prompt: str) -> str:
 def generate_user_response(review, rating):
     prompt = f"""
 You are a customer support assistant.
-Respond politely and empathetically.
+Write a polite response to the customer.
 
 Rating: {rating}
-Review: "{review}"
+Review: {review}
 """
     return call_llm(prompt)
 
 
 def generate_summary(review):
     prompt = f"""
-Summarize this customer review in one short sentence.
+Summarize this customer feedback in one sentence:
 
-Review: "{review}"
+{review}
 """
     return call_llm(prompt)
 
 
 def generate_recommended_action(review, rating):
     prompt = f"""
-Based on the review and rating, suggest one internal action.
+Suggest an internal action for this feedback.
 
 Rating: {rating}
-Review: "{review}"
+Review: {review}
 """
     return call_llm(prompt)
