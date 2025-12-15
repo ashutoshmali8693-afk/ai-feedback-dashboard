@@ -1,7 +1,6 @@
 import requests
 import streamlit as st
 
-# Read API key from Streamlit secrets
 OPENROUTER_API_KEY = st.secrets.get("OPENROUTER_API_KEY")
 
 if not OPENROUTER_API_KEY:
@@ -15,8 +14,6 @@ def call_llm(prompt: str) -> str:
     headers = {
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
         "Content-Type": "application/json",
-
-        # REQUIRED by OpenRouter
         "HTTP-Referer": "https://ai-feedback-dashboard.streamlit.app",
         "X-Title": "AI Feedback Dashboard"
     }
@@ -37,7 +34,6 @@ def call_llm(prompt: str) -> str:
     )
 
     response.raise_for_status()
-
     return response.json()["choices"][0]["message"]["content"]
 
 
